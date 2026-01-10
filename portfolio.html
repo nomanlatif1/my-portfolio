@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noman Latif | Senior Sales Operations & Data Analyst</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; overflow-x: hidden; background-color: #020617; color: #cbd5e1; }
+        .bg-grid { background-image: radial-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
+        .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease; }
+        .glass-card:hover { border-color: rgba(59, 130, 246, 0.3); transform: translateY(-5px); }
+        .gradient-text { background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .timeline-dot::before { content: ''; position: absolute; left: -9px; top: 0; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 15px #3b82f6; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+    </style>
+</head>
+<body class="bg-grid">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-[#020617]/80 border-b border-white/5 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/20">NL</div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-extrabold text-white tracking-tight uppercase">Noman Latif</span>
+                    <span class="text-[9px] font-bold text-blue-400 tracking-[0.2em] uppercase">Operations & Data Architect</span>
+                </div>
+            </div>
+            
+            <div class="hidden lg:flex gap-8 text-[11px] font-bold tracking-widest text-slate-400 uppercase">
+                <a href="#home" class="hover:text-blue-400 transition-all">Overview</a>
+                <a href="#experience" class="hover:text-blue-400 transition-all">Experience</a>
+                <a href="#analytics" class="hover:text-blue-400 transition-all">Analysis</a>
+                <a href="#education" class="hover:text-blue-400 transition-all">Background</a>
+                <a href="#contact" class="hover:text-blue-400 transition-all">Connect</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="https://linkedin.com/in/nomanlatif735/" target="_blank" class="text-slate-400 hover:text-blue-400 text-lg transition-all"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="https://wa.me/message/EYGPMX446JO3F1" target="_blank" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-full text-[10px] font-bold tracking-widest transition-all shadow-lg shadow-blue-500/30">LET'S TALK</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section id="home" class="min-h-screen flex items-center pt-20 px-6">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest">
+                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                    Employee of the Year 2025
+                </div>
+                <h1 class="text-6xl lg:text-8xl font-black text-white mb-6 tracking-tighter leading-none">
+                    Data Driven <br><span class="gradient-text italic">Performance.</span>
+                </h1>
+                <p class="text-slate-400 text-lg mb-10 leading-relaxed max-w-lg font-medium">
+                    6+ years experience in <span class="text-white font-bold">Sales Operations</span>. I specialize in building automated ecosystems that turn raw data into commercial milestones.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#analytics" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-500 transition-all shadow-2xl shadow-blue-500/20 flex items-center gap-3 uppercase text-xs">
+                        View Analytics Dashboard <i class="fa-solid fa-chart-pie"></i>
+                    </a>
+                    <a href="mailto:M.noman.latif3@gmail.com" class="border border-white/10 text-white px-8 py-4 rounded-xl font-bold hover:bg-white/5 transition-all uppercase text-xs">
+                        Download Resume
+                    </a>
+                </div>
+            </div>
+            <div class="relative hidden lg:block">
+                <div class="glass-card p-10 rounded-[2.5rem] border-t-blue-500/30 shadow-2xl">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-blue-500">Live Trend Analysis</span>
+                            <h4 class="text-xl font-bold text-white mt-1">Operational Efficiency</h4>
+                        </div>
+                        <div class="px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded text-[10px] font-bold">+24% YoY</div>
+                    </div>
+                    <canvas id="heroChart" height="250"></canvas>
+                </div>
+                <div class="absolute -bottom-6 -left-6 glass-card p-6 rounded-2xl border-l-4 border-blue-500 max-w-[200px] animate-bounce-slow">
+                    <div class="text-2xl font-black text-white italic">80 WPM</div>
+                    <div class="text-[9px] font-bold text-slate-500 uppercase mt-1">Typing Proficiency</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Professional Experience -->
+    <section id="experience" class="py-32 px-6">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-xs font-black text-blue-500 mb-20 tracking-[0.8em] uppercase text-center italic underline underline-offset-8 decoration-blue-500/30">Career Trajectory</h2>
+            
+            <div class="space-y-24 relative">
+                <div class="absolute left-0 lg:left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-blue-600 via-slate-800 to-transparent lg:-translate-x-1/2"></div>
+
+                <!-- Nelson Paints -->
+                <div class="relative pl-10 lg:pl-0">
+                    <div class="lg:w-[45%] lg:text-right lg:ml-0 ml-auto">
+                        <div class="absolute left-[-4px] lg:left-1/2 lg:-translate-x-1/2 top-0 w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_15px_#3b82f6]"></div>
+                        <span class="text-[10px] font-black text-blue-500 uppercase tracking-widest">Sep 2022 — Present</span>
+                        <h3 class="text-2xl font-black text-white mt-3 italic uppercase leading-none">Sales Operations Executive</h3>
+                        <p class="text-slate-500 font-bold text-xs mb-6 uppercase tracking-widest mt-1">Nelson Paints Industries (PVT.) LTD.</p>
+                        <ul class="space-y-4 text-slate-400 text-sm leading-relaxed font-medium">
+                            <li class="flex gap-4 lg:flex-row-reverse"><i class="fa-solid fa-check-circle text-blue-500 mt-1"></i> Architected real-time performance dashboards in Google Sheets, leading to 15% faster strategic decision cycles.</li>
+                            <li class="flex gap-4 lg:flex-row-reverse"><i class="fa-solid fa-check-circle text-blue-500 mt-1"></i> Supervise daily order workflows for Trade Sales teams (Industrial & Project), ensuring 100% processing accuracy.</li>
+                            <li class="flex gap-4 lg:flex-row-reverse"><i class="fa-solid fa-check-circle text-blue-500 mt-1"></i> Developed critical Trade Dealer incentive models contributing to 75% of total business share.</li>
+                            <li class="flex gap-4 lg:flex-row-reverse"><i class="fa-solid fa-check-circle text-blue-500 mt-1"></i> Implemented a central client quotation database, reducing customer wait-time by 50%.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- MicroMerger -->
+                <div class="relative pl-10 lg:pl-0">
+                    <div class="lg:w-[45%] lg:ml-auto">
+                        <div class="absolute left-[-4px] lg:left-1/2 lg:-translate-x-1/2 top-0 w-2 h-2 rounded-full bg-slate-700 shadow-[0_0_15px_#475569]"></div>
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Dec 2018 — Dec 2021</span>
+                        <h3 class="text-2xl font-black text-white mt-3 italic uppercase leading-none">Data Verification Associate</h3>
+                        <p class="text-slate-500 font-bold text-xs mb-6 uppercase tracking-widest mt-1">MicroMerger Pvt. Ltd. (UNICEF Program)</p>
+                        <ul class="space-y-4 text-slate-400 text-sm leading-relaxed font-medium">
+                            <li class="flex gap-4"><i class="fa-solid fa-check-circle text-slate-600 mt-1"></i> Managed high-volume dataset verification for Polio Eradication campaigns with zero margin for error.</li>
+                            <li class="flex gap-4"><i class="fa-solid fa-check-circle text-slate-600 mt-1"></i> Streamlined administrative documentation, ensuring rapid data flow into the UNICEF reporting systems.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Freedom Academy -->
+                <div class="relative pl-10 lg:pl-0">
+                    <div class="lg:w-[45%] lg:text-right lg:ml-0 ml-auto">
+                        <div class="absolute left-[-4px] lg:left-1/2 lg:-translate-x-1/2 top-0 w-2 h-2 rounded-full bg-slate-800"></div>
+                        <span class="text-[10px] font-black text-slate-600 uppercase tracking-widest">Sep 2017 — Nov 2018</span>
+                        <h3 class="text-2xl font-black text-white mt-3 italic uppercase leading-none">Computer Lab Operator</h3>
+                        <p class="text-slate-500 font-bold text-xs mb-6 uppercase tracking-widest mt-1">Freedom Academy</p>
+                        <ul class="space-y-4 text-slate-400 text-sm leading-relaxed font-medium">
+                            <li class="flex gap-4 lg:flex-row-reverse"><i class="fa-solid fa-check-circle text-slate-700 mt-1"></i> Conducted computer literacy classes for 200+ students, focusing on MS Office and digital basics.</li>
+                            <li class="flex gap-4 lg:flex-row-reverse"><i class="fa-solid fa-check-circle text-slate-700 mt-1"></i> Managed full-scale hardware/software maintenance for the institutional network.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Dashboard -->
+    <section id="analytics" class="py-32 px-6 bg-slate-900/30">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+                <div>
+                    <h2 class="text-xs font-black text-blue-500 uppercase tracking-[0.5em] mb-4">Operations Dashboard</h2>
+                    <h3 class="text-5xl font-black text-white italic uppercase tracking-tighter">Business Intelligence</h3>
+                </div>
+                <div class="bg-blue-600/10 p-4 rounded-xl border border-blue-500/20 max-w-sm">
+                    <p class="text-[11px] text-slate-400 leading-relaxed italic">"Visualization of real-world operational trends from the Trade & Industrial paint market (Simulated Dataset)."</p>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-8 glass-card p-10 rounded-[3rem]">
+                    <div class="flex justify-between items-center mb-10">
+                        <h4 class="text-white font-bold uppercase tracking-widest text-xs">Regional Recovery Trend (%)</h4>
+                        <div class="flex gap-4 text-[9px] font-black uppercase text-slate-500">
+                            <span><i class="fa-solid fa-circle text-blue-500 mr-1"></i> Target (100%)</span>
+                            <span><i class="fa-solid fa-circle text-slate-700 mr-1"></i> Actual Collection</span>
+                        </div>
+                    </div>
+                    <canvas id="recoveryChart" height="150"></canvas>
+                </div>
+
+                <div class="lg:col-span-4 glass-card p-10 rounded-[3rem] flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-8">Sales Composition</h4>
+                        <canvas id="salesMixChart"></canvas>
+                    </div>
+                    <div class="mt-8 pt-8 border-t border-white/5">
+                        <div class="flex justify-between items-center text-[10px] font-bold text-slate-500 uppercase">
+                            <span>Primary Revenue Driver</span>
+                            <span class="text-blue-500 font-black">Trade Dept.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education & Certificates -->
+    <section id="education" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-20">
+                <div>
+                    <h2 class="text-xs font-black text-blue-500 uppercase tracking-[0.5em] mb-12 italic">Academic History</h2>
+                    <div class="space-y-8">
+                        <div class="glass-card p-8 rounded-3xl border-l-4 border-blue-600 relative overflow-hidden">
+                            <div class="absolute -right-4 -top-4 text-blue-600/10 text-8xl font-black"><i class="fa-solid fa-code"></i></div>
+                            <span class="text-[10px] font-bold text-slate-500 tracking-widest">2015 — 2018</span>
+                            <h4 class="text-2xl font-black text-white mt-1 italic uppercase">ACCP Pro</h4>
+                            <p class="text-blue-500 text-xs font-black tracking-widest uppercase mt-1">APTECH Computer Education</p>
+                            <div class="flex flex-wrap gap-2 mt-6">
+                                <span class="px-3 py-1 bg-white/5 rounded text-[9px] font-bold text-slate-400 uppercase">Java</span>
+                                <span class="px-3 py-1 bg-white/5 rounded text-[9px] font-bold text-slate-400 uppercase">SQL Server</span>
+                                <span class="px-3 py-1 bg-white/5 rounded text-[9px] font-bold text-slate-400 uppercase">PHP</span>
+                                <span class="px-3 py-1 bg-white/5 rounded text-[9px] font-bold text-slate-400 uppercase">Software Design</span>
+                            </div>
+                        </div>
+                        <div class="glass-card p-8 rounded-3xl border-l-4 border-slate-700">
+                            <span class="text-[10px] font-bold text-slate-500 tracking-widest">2012 — 2014</span>
+                            <h4 class="text-2xl font-black text-white mt-1 italic uppercase">Intermediate</h4>
+                            <p class="text-slate-500 text-xs font-black tracking-widest uppercase mt-1">Jamia Millia Govt. Degree College</p>
+                            <p class="text-slate-400 text-xs mt-4">Pre-Engineering Foundation.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-black text-blue-500 uppercase tracking-[0.5em] mb-12 italic">Industry Credentials</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                        <div class="glass-card p-6 rounded-2xl flex items-center gap-4 hover:border-blue-500/50">
+                            <i class="fa-brands fa-google text-2xl text-blue-400"></i>
+                            <div>
+                                <h5 class="text-white font-bold text-xs uppercase leading-tight">Data Analytics</h5>
+                                <p class="text-[8px] text-slate-500 font-bold uppercase mt-1">Google Professional</p>
+                            </div>
+                        </div>
+                        <div class="glass-card p-6 rounded-2xl flex items-center gap-4 hover:border-yellow-500/50">
+                            <i class="fa-solid fa-chart-line text-2xl text-yellow-500"></i>
+                            <div>
+                                <h5 class="text-white font-bold text-xs uppercase leading-tight">Power BI Mastery</h5>
+                                <p class="text-[8px] text-slate-500 font-bold uppercase mt-1">Udemy Certified</p>
+                            </div>
+                        </div>
+                        <div class="glass-card p-6 rounded-2xl flex items-center gap-4 hover:border-blue-600/50">
+                            <i class="fa-solid fa-database text-2xl text-blue-600"></i>
+                            <div>
+                                <h5 class="text-white font-bold text-xs uppercase leading-tight">MySQL Specialist</h5>
+                                <p class="text-[8px] text-slate-500 font-bold uppercase mt-1">365 Careers</p>
+                            </div>
+                        </div>
+                        <div class="glass-card p-6 rounded-2xl flex items-center gap-4 hover:border-emerald-500/50">
+                            <i class="fa-solid fa-medal text-2xl text-emerald-500"></i>
+                            <div>
+                                <h5 class="text-white font-bold text-xs uppercase leading-tight">Top Performance</h5>
+                                <p class="text-[8px] text-slate-500 font-bold uppercase mt-1">MicroMerger Typing</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-10 rounded-[2rem] bg-gradient-to-br from-blue-600/20 to-transparent border-blue-500/20">
+                        <div class="flex items-center gap-6">
+                            <div class="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-3xl text-white shadow-xl shadow-blue-500/30">
+                                <i class="fa-solid fa-trophy"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-black uppercase tracking-tighter text-xl italic">Employee of the Year</h4>
+                                <p class="text-blue-400 text-[10px] font-black uppercase tracking-widest mt-1">Nelson Paints Industries | May 2025</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-40 px-6">
+        <div class="max-w-4xl mx-auto glass-card rounded-[4rem] p-16 text-center relative overflow-hidden shadow-2xl">
+            <div class="absolute -top-10 -right-10 w-64 h-64 bg-blue-600/10 blur-[120px]"></div>
+            <h2 class="text-5xl md:text-7xl font-black text-white mb-8 tracking-tighter italic uppercase">Let's Connect.</h2>
+            <p class="text-slate-400 mb-12 max-w-lg mx-auto font-medium">Available for collaboration on data strategy, operational automation, and business intelligence projects.</p>
+            
+            <div class="flex flex-wrap justify-center gap-6 mb-12">
+                <a href="https://linkedin.com/in/nomanlatif735/" target="_blank" class="flex items-center gap-4 bg-white/5 hover:bg-white/10 px-10 py-5 rounded-2xl border border-white/10 transition-all group">
+                    <i class="fa-brands fa-linkedin text-[#0077b5] text-3xl group-hover:scale-110 transition-transform"></i>
+                    <span class="text-white font-black uppercase tracking-widest text-xs">LinkedIn</span>
+                </a>
+                <a href="https://wa.me/message/EYGPMX446JO3F1" target="_blank" class="flex items-center gap-4 bg-emerald-500 text-white px-10 py-5 rounded-2xl transition-all hover:bg-emerald-400 shadow-xl shadow-emerald-500/20 group">
+                    <i class="fa-brands fa-whatsapp text-3xl group-hover:scale-110 transition-transform"></i>
+                    <span class="font-black uppercase tracking-widest text-xs">WhatsApp</span>
+                </a>
+            </div>
+
+            <div class="flex flex-col items-center gap-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">
+                <span>Karachi, Pakistan</span>
+                <span class="text-blue-500">+92 348 908 8962</span>
+                <span class="lowercase text-slate-600 tracking-normal font-bold">M.noman.latif3@gmail.com</span>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 text-center text-[10px] font-black text-slate-800 uppercase tracking-[1.5em] opacity-40">
+        NOMAN LATIF // STRATEGIC OPERATIONS // 2026
+    </footer>
+
+    <script>
+        const ctxHero = document.getElementById('heroChart').getContext('2d');
+        const ctxMix = document.getElementById('salesMixChart').getContext('2d');
+        const ctxRecovery = document.getElementById('recoveryChart').getContext('2d');
+
+        Chart.defaults.color = '#64748b';
+        Chart.defaults.font.family = 'Plus Jakarta Sans';
+        Chart.defaults.font.weight = '600';
+
+        // Hero Chart (Business Trend)
+        new Chart(ctxHero, {
+            type: 'line',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q1-25', 'Q2-25'],
+                datasets: [{
+                    label: 'Workflow Efficiency',
+                    data: [30, 45, 42, 65, 88, 96],
+                    borderColor: '#3b82f6',
+                    borderWidth: 4,
+                    pointBackgroundColor: '#3b82f6',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: (context) => {
+                        const gradient = ctxHero.createLinearGradient(0, 0, 0, 400);
+                        gradient.addColorStop(0, 'rgba(59, 130, 246, 0.2)');
+                        gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+                        return gradient;
+                    }
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { display: true, grid: { color: 'rgba(255,255,255,0.02)' } }, 
+                    x: { grid: { display: false } } 
+                }
+            }
+        });
+
+        // Sales Mix (Doughnut)
+        new Chart(ctxMix, {
+            type: 'doughnut',
+            data: {
+                labels: ['Trade Sales', 'Industrial', 'Project'],
+                datasets: [{
+                    data: [75, 15, 10],
+                    backgroundColor: ['#3b82f6', '#1e293b', '#475569'],
+                    borderWidth: 0,
+                    hoverOffset: 15
+                }]
+            },
+            options: {
+                cutout: '80%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { padding: 20, color: '#94a3b8', font: { size: 9, weight: 'bold' } } }
+                }
+            }
+        });
+
+        // Recovery (Bar Chart)
+        new Chart(ctxRecovery, {
+            type: 'bar',
+            data: {
+                labels: ['Karachi', 'Sindh Central', 'Sindh Interior', 'Balochistan'],
+                datasets: [
+                    {
+                        label: 'Actual Recovery (%)',
+                        data: [92, 84, 68, 42],
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 12,
+                        barThickness: 40
+                    },
+                    {
+                        label: 'Target',
+                        data: [100, 100, 100, 100],
+                        backgroundColor: 'rgba(255,255,255,0.03)',
+                        borderRadius: 12,
+                        barThickness: 40
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.03)' } },
+                    x: { grid: { display: false } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    </script>
+
+</body>
+</html>
