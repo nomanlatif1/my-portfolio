@@ -1,394 +1,663 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noman Latif | Senior Sales Operations & Data Analyst</title>
+    <title>Noman Latif | 3D Interactive Sales Analytics & BI Portfolio</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#030712',
+                            glass: 'rgba(11, 19, 38, 0.75)',
+                            border: 'rgba(0, 242, 254, 0.25)',
+                            cyan: '#00f2fe',
+                            blue: '#3b82f6',
+                            purple: '#8b5cf6',
+                            gold: '#f59e0b',
+                            emerald: '#10b981'
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Three.js, GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono&display=swap');
-        
-        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; overflow-x: hidden; background-color: #020617; color: #cbd5e1; }
-        .bg-grid { background-image: radial-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
-        .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease; }
-        .glass-card:hover { border-color: rgba(59, 130, 246, 0.3); transform: translateY(-5px); }
-        .gradient-text { background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .timeline-dot::before { content: ''; position: absolute; left: -9px; top: 0; width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 15px #3b82f6; }
-        
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #020617; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+        :root {
+            --cyan-glow: rgba(0, 242, 254, 0.4);
+            --gold-glow: rgba(245, 158, 11, 0.4);
+        }
+
+        body {
+            background-color: #030712;
+            color: #f3f4f6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(11, 19, 38, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 242, 254, 0.18);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 242, 254, 0.05);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 242, 254, 0.5);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px var(--cyan-glow);
+            transform: translateY(-6px) scale(1.01);
+        }
+
+        .glass-card-gold {
+            background: rgba(22, 18, 10, 0.75);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.08);
+        }
+
+        .glass-card-gold:hover {
+            border-color: rgba(245, 158, 11, 0.7);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px var(--gold-glow);
+            transform: translateY(-6px) scale(1.01);
+        }
+
+        .glass-nav {
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0, 242, 254, 0.15);
+        }
+
+        .text-gradient-cyan {
+            background: linear-gradient(135deg, #00f2fe 0%, #3b82f6 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-gold {
+            background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #d97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cyber-grid-bg {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 242, 254, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 242, 254, 0.03) 1px, transparent 1px);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2fe;
+        }
     </style>
 </head>
-<body class="bg-grid">
+<body class="relative cyber-grid-bg antialiased selection:bg-cyber-cyan selection:text-black">
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-[#020617]/80 border-b border-white/5 backdrop-blur-xl">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#hero" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 rounded-xl bg-cyber-cyan/10 border border-cyber-cyan/40 flex items-center justify-center group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(0,242,254,0.3)]">
+                    <i class="fa-solid fa-chart-line text-cyber-cyan text-lg"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-lg tracking-wider text-white group-hover:text-cyber-cyan transition-colors">NOMAN LATIF</span>
+                    <span class="block text-[10px] font-mono text-gray-400 tracking-widest">SALES ANALYST // BI SPECIALIST</span>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex items-center space-x-8 text-xs font-mono">
+                <a href="#hero" class="text-gray-300 hover:text-cyber-cyan transition-colors"><span class="text-cyber-cyan">01.</span> Home</a>
+                <a href="#experience" class="text-gray-300 hover:text-cyber-cyan transition-colors"><span class="text-cyber-cyan">02.</span> Experience</a>
+                <a href="#certifications" class="text-gray-300 hover:text-cyber-cyan transition-colors"><span class="text-cyber-cyan">03.</span> Credentials</a>
+                <a href="#skills" class="text-gray-300 hover:text-cyber-cyan transition-colors"><span class="text-cyber-cyan">04.</span> Core Skills</a>
+                <a href="#contact" class="text-gray-300 hover:text-cyber-cyan transition-colors"><span class="text-cyber-cyan">05.</span> Contact</a>
+            </nav>
+
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/20">NL</div>
-                <div class="flex flex-col">
-                    <span class="text-sm font-extrabold text-white tracking-tight uppercase">Noman Latif</span>
-                    <span class="text-[9px] font-bold text-blue-400 tracking-[0.2em] uppercase">Operations & Data Architect</span>
-                </div>
-            </div>
-            
-            <div class="hidden lg:flex gap-8 text-[11px] font-bold tracking-widest text-slate-400 uppercase">
-                <a href="#home" class="hover:text-blue-400 transition-all">Overview</a>
-                <a href="#experience" class="hover:text-blue-400 transition-all">Experience</a>
-                <a href="#analytics" class="hover:text-blue-400 transition-all">Analysis</a>
-                <a href="#education" class="hover:text-blue-400 transition-all">Background</a>
-                <a href="#contact" class="hover:text-blue-400 transition-all">Connect</a>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <a href="https://linkedin.com/in/nomanlatif735/" target="_blank" class="text-slate-400 hover:text-blue-400 text-lg transition-all"><i class="fa-brands fa-linkedin"></i></a>
-                <a href="https://wa.me/message/EYGPMX446JO3F1" target="_blank" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-full text-[10px] font-bold tracking-widest transition-all shadow-lg shadow-blue-500/30">LET'S TALK</a>
+                <a href="mailto:m.noman.latif3@gmail.com" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyber-cyan/10 border border-cyber-cyan/40 text-cyber-cyan text-xs font-mono font-semibold hover:bg-cyber-cyan hover:text-black transition-all shadow-[0_0_15px_rgba(0,242,254,0.2)]">
+                    <i class="fa-solid fa-paper-plane"></i> Contact Me
+                </a>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- Hero -->
-    <section id="home" class="min-h-screen flex items-center pt-20 px-6">
-        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-                <div class="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest">
-                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-                    Employee of the Year 2025
+    <main class="relative z-10 pt-20">
+        
+        <section id="hero" class="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative py-20">
+            <div class="max-w-4xl mx-auto text-center space-y-8 gsap-hero">
+                
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border-cyber-cyan/50 text-cyber-cyan text-xs font-mono tracking-wider">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyber-cyan animate-ping"></span>
+                    Now @ Karachi Coffee Company — Sales Analyst
                 </div>
-                <h1 class="text-6xl lg:text-8xl font-black text-white mb-6 tracking-tighter leading-none">
-                    Data Driven <br><span class="gradient-text italic">Performance.</span>
+
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-none">
+                    Architecting High-Impact <br/>
+                    <span class="text-gradient-cyan">Commercial Analytics</span>
                 </h1>
-                <p class="text-slate-400 text-lg mb-10 leading-relaxed max-w-lg font-medium">
-                    6+ years experience in <span class="text-white font-bold">Sales Operations and Data Analyst</span>. I specialize in building automated ecosystems that turn raw data into commercial milestones.
+
+                <p class="text-base sm:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                    Sales Operations Leader & BI Specialist transforming revenue data into predictive sales forecasting, automated Google Sheets ecosystems, and Power BI executive dashboards.
                 </p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="#analytics" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-500 transition-all shadow-2xl shadow-blue-500/20 flex items-center gap-3 uppercase text-xs">
-                        View Analytics Dashboard <i class="fa-solid fa-chart-pie"></i>
-                    </a>
-                    
-                </div>
-            </div>
-            <div class="relative hidden lg:block">
-                <div class="glass-card p-10 rounded-[2.5rem] border-t-blue-500/30 shadow-2xl">
-                    <div class="flex items-center justify-between mb-8">
-                        <div>
-                            <span class="text-[10px] font-black uppercase tracking-widest text-blue-500">Live Trend Analysis</span>
-                            <h4 class="text-xl font-bold text-white mt-1">Operational Efficiency</h4>
-                        </div>
-                        <div class="px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded text-[10px] font-bold">+24% YoY</div>
+
+                <!-- Live Key Metrics Pill Row -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto pt-4 text-left font-mono">
+                    <div class="glass-card p-4 rounded-xl border-cyber-cyan/30">
+                        <span class="block text-2xl font-bold text-cyber-cyan">75%+</span>
+                        <span class="text-[11px] text-gray-400">Trade Revenue Managed</span>
                     </div>
-                    <canvas id="heroChart" height="250"></canvas>
+                    <div class="glass-card p-4 rounded-xl border-cyber-gold/30">
+                        <span class="block text-2xl font-bold text-cyber-gold">2025</span>
+                        <span class="text-[11px] text-gray-400">Employee of the Year</span>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl border-cyber-purple/30">
+                        <span class="block text-2xl font-bold text-cyber-purple">100%</span>
+                        <span class="text-[11px] text-gray-400">Regional Data Accuracy</span>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl border-cyber-emerald/30">
+                        <span class="block text-2xl font-bold text-cyber-emerald">6+</span>
+                        <span class="text-[11px] text-gray-400">Global Certifications</span>
+                    </div>
                 </div>
-                <div class="absolute -bottom-6 -left-6 glass-card p-6 rounded-2xl border-l-4 border-blue-500 max-w-[200px] animate-bounce-slow">
-                    <div class="text-2xl font-black text-white italic">80 WPM</div>
-                    <div class="text-[9px] font-bold text-slate-500 uppercase mt-1">Typing Proficiency</div>
+
+                <div class="flex items-center justify-center gap-4 pt-6">
+                    <a href="#experience" class="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-cyber-cyan to-cyber-blue text-black font-extrabold text-sm hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] transition-all transform hover:-translate-y-1">
+                        Explore 3D Journey <i class="fa-solid fa-angle-down"></i>
+                    </a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Professional Experience -->
-    <section id="experience" class="py-32 px-6">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-xs font-black text-blue-500 mb-20 tracking-[0.8em] uppercase text-center italic underline underline-offset-8 decoration-blue-500/30">Career Trajectory</h2>
-            
-            <div class="space-y-24 relative">
-                <div class="absolute left-0 lg:left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-blue-600 via-slate-800 to-transparent lg:-translate-x-1/2"></div>
+        <section id="experience" class="py-32 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+            <div class="text-center space-y-4 gsap-card">
+                <span class="text-cyber-cyan font-mono text-xs tracking-widest uppercase">// Career Roadmap</span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">Professional Experience</h2>
+                <p class="text-gray-400 max-w-xl mx-auto text-sm">Driving commercial sales growth, store analytics, and regional data operations across Pakistan.</p>
+            </div>
 
-                <!-- Nelson Paints -->
-                <div class="relative pl-10 lg:pl-0">
-                    <div class="lg:w-[45%] lg:text-right lg:ml-0 ml-auto">
-                        <div class="absolute left-[-4px] lg:left-1/2 lg:-translate-x-1/2 top-0 w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_15px_#3b82f6]"></div>
-                        <span class="text-[10px] font-black text-blue-500 uppercase tracking-widest">Sep 2022 — Present</span>
-                        <h3 class="text-2xl font-black text-white mt-3 italic uppercase leading-none">Sales Operations Executive</h3>
-                        <p class="text-slate-500 font-bold text-xs mb-6 uppercase tracking-widest mt-1">Nelson Paints Industries (PVT.) LTD.</p>
-                        <ul class="space-y-4 text-slate-400 text-sm leading-relaxed font-medium">
-                            <li class="flex gap-4 lg:flex-row-reverse"><i class="fa-solid fa-check-circle text-blue-500 mt-1"></i> Architected real-time performance dashboards in Google Sheets, leading to 15% faster strategic decision cycles.</li>
-                            <li class="flex gap-4 lg:flex-row-reverse"><i class="fa-solid fa-check-circle text-blue-500 mt-1"></i> Supervise daily order workflows for Trade Sales teams (Industrial & Project), ensuring 100% processing accuracy.</li>
-                            <li class="flex gap-4 lg:flex-row-reverse"><i class="fa-solid fa-check-circle text-blue-500 mt-1"></i> Developed critical Trade Dealer incentive models contributing to 75% of total business share.</li>
-                            <li class="flex gap-4 lg:flex-row-reverse"><i class="fa-solid fa-check-circle text-blue-500 mt-1"></i> Implemented a central client quotation database, reducing customer wait-time by 50%.</li>
-                        </ul>
+            <div class="space-y-12 relative before:absolute before:inset-0 before:left-6 sm:before:left-1/2 before:w-0.5 before:bg-cyber-cyan/20">
+                
+                <!-- Karachi Coffee Company -->
+                <div class="relative flex flex-col sm:flex-row items-center justify-between gap-8 gsap-card">
+                    <div class="w-full sm:w-1/2 sm:pr-12 sm:text-right order-2 sm:order-1">
+                        <div class="glass-card p-6 sm:p-8 rounded-2xl space-y-4">
+                            <div class="flex items-center gap-2 sm:justify-end">
+                                <span class="px-3 py-1 rounded-full bg-cyber-cyan/10 text-cyber-cyan font-mono text-xs font-semibold border border-cyber-cyan/30">Sep 2026 – Present</span>
+                                <span class="px-2 py-0.5 rounded bg-amber-500/10 text-cyber-gold font-mono text-[10px]">NEW ROLE</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">Sales Analyst</h3>
+                            <h4 class="text-cyber-cyan font-semibold text-sm"><i class="fa-solid fa-mug-hot"></i> Karachi Coffee Company</h4>
+                            <ul class="text-gray-300 text-sm space-y-2 text-left list-disc list-inside leading-relaxed">
+                                <li>Conducting sales trend analysis, outlet performance benchmarking, and commercial revenue modeling.</li>
+                                <li>Engineering automated demand forecasting pipelines and inventory control reporting systems.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="absolute left-6 sm:left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-cyber-bg border-2 border-cyber-cyan flex items-center justify-center z-10 shadow-[0_0_15px_rgba(0,242,254,0.5)] order-1 sm:order-2">
+                        <i class="fa-solid fa-mug-saucer text-cyber-cyan text-xs"></i>
+                    </div>
+                    <div class="w-full sm:w-1/2 hidden sm:block order-3"></div>
+                </div>
+
+                <!-- Nelson Paint Industries -->
+                <div class="relative flex flex-col sm:flex-row items-center justify-between gap-8 gsap-card">
+                    <div class="w-full sm:w-1/2 hidden sm:block order-1"></div>
+                    <div class="absolute left-6 sm:left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-cyber-bg border-2 border-cyber-gold flex items-center justify-center z-10 shadow-[0_0_20px_rgba(245,158,11,0.6)] order-1 sm:order-2">
+                        <i class="fa-solid fa-trophy text-cyber-gold text-xs"></i>
+                    </div>
+                    <div class="w-full sm:w-1/2 sm:pl-12 order-2 sm:order-3">
+                        <div class="glass-card-gold p-6 sm:p-8 rounded-2xl space-y-4">
+                            <div class="flex items-center justify-between flex-wrap gap-2">
+                                <span class="px-3 py-1 rounded-full bg-amber-500/10 text-cyber-gold font-mono text-xs font-semibold border border-amber-500/30">Sep 2023 – Sep 2026</span>
+                                <span class="px-3 py-1 rounded-full bg-amber-500/20 text-cyber-gold text-xs font-bold border border-amber-500/50"><i class="fa-solid fa-award"></i> Employee of the Year 2025</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">Senior Executive - Sales Operations</h3>
+                            <h4 class="text-cyber-gold font-semibold text-sm"><i class="fa-solid fa-fill-drip"></i> Nelson Paint Industries Pvt. Ltd.</h4>
+                            <ul class="text-gray-300 text-sm space-y-2 list-disc list-inside leading-relaxed">
+                                <li>Architected a centralized Google Sheets automated reporting ecosystem for Sindh & Balochistan regions.</li>
+                                <li>Managed data operations for Trade Sales accounting for over <strong>75% of total company revenue</strong>.</li>
+                                <li>Formulated Trade Dealer incentive schemes, recovery tracking, and strategic pricing models.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
                 <!-- MicroMerger -->
-                <div class="relative pl-10 lg:pl-0">
-                    <div class="lg:w-[45%] lg:ml-auto">
-                        <div class="absolute left-[-4px] lg:left-1/2 lg:-translate-x-1/2 top-0 w-2 h-2 rounded-full bg-slate-700 shadow-[0_0_15px_#475569]"></div>
-                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Dec 2018 — Dec 2021</span>
-                        <h3 class="text-2xl font-black text-white mt-3 italic uppercase leading-none">Data Verification Associate</h3>
-                        <p class="text-slate-500 font-bold text-xs mb-6 uppercase tracking-widest mt-1">MicroMerger Pvt. Ltd. (UNICEF Program)</p>
-                        <ul class="space-y-4 text-slate-400 text-sm leading-relaxed font-medium">
-                            <li class="flex gap-4"><i class="fa-solid fa-check-circle text-slate-600 mt-1"></i> Managed high-volume dataset verification for Polio Eradication campaigns with zero margin for error.</li>
-                            <li class="flex gap-4"><i class="fa-solid fa-check-circle text-slate-600 mt-1"></i> Streamlined administrative documentation, ensuring rapid data flow into the UNICEF reporting systems.</li>
-                        </ul>
+                <div class="relative flex flex-col sm:flex-row items-center justify-between gap-8 gsap-card">
+                    <div class="w-full sm:w-1/2 sm:pr-12 sm:text-right order-2 sm:order-1">
+                        <div class="glass-card p-6 sm:p-8 rounded-2xl space-y-4">
+                            <span class="inline-block px-3 py-1 rounded-full bg-cyber-purple/10 text-cyber-purple font-mono text-xs font-semibold border border-cyber-purple/30">Jan 2020 – Dec 2021</span>
+                            <h3 class="text-xl font-bold text-white">Data Verification Associate</h3>
+                            <h4 class="text-cyber-purple font-semibold text-sm"><i class="fa-solid fa-building-ngo"></i> MicroMerger Pvt. Ltd. (UNICEF Partnership)</h4>
+                            <ul class="text-gray-300 text-sm space-y-2 text-left list-disc list-inside leading-relaxed">
+                                <li>Supervised polio campaign data verification operations across Karachi East and Hyderabad divisions.</li>
+                                <li>Led a team of 10 Data Entry Operators, maintaining 100% data fidelity and campaign deadlines.</li>
+                            </ul>
+                        </div>
                     </div>
+                    <div class="absolute left-6 sm:left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-cyber-bg border-2 border-cyber-purple flex items-center justify-center z-10 shadow-[0_0_15px_rgba(139,92,246,0.5)] order-1 sm:order-2">
+                        <i class="fa-solid fa-shield-halved text-cyber-purple text-xs"></i>
+                    </div>
+                    <div class="w-full sm:w-1/2 hidden sm:block order-3"></div>
                 </div>
 
-                <!-- Freedom Academy -->
-                <div class="relative pl-10 lg:pl-0">
-                    <div class="lg:w-[45%] lg:text-right lg:ml-0 ml-auto">
-                        <div class="absolute left-[-4px] lg:left-1/2 lg:-translate-x-1/2 top-0 w-2 h-2 rounded-full bg-slate-800"></div>
-                        <span class="text-[10px] font-black text-slate-600 uppercase tracking-widest">Sep 2017 — Nov 2018</span>
-                        <h3 class="text-2xl font-black text-white mt-3 italic uppercase leading-none">Computer Lab Operator</h3>
-                        <p class="text-slate-500 font-bold text-xs mb-6 uppercase tracking-widest mt-1">Freedom Academy</p>
-                        <ul class="space-y-4 text-slate-400 text-sm leading-relaxed font-medium">
-                            <li class="flex gap-4 lg:flex-row-reverse"><i class="fa-solid fa-check-circle text-slate-700 mt-1"></i> Conducted computer literacy classes for 200+ students, focusing on MS Office and digital basics.</li>
-                            <li class="flex gap-4 lg:flex-row-reverse"><i class="fa-solid fa-check-circle text-slate-700 mt-1"></i> Managed full-scale hardware/software maintenance for the institutional network.</li>
-                        </ul>
-                    </div>
-                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Analytics Dashboard -->
-    <section id="analytics" class="py-32 px-6 bg-slate-900/30">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-                <div>
-                    <h2 class="text-xs font-black text-blue-500 uppercase tracking-[0.5em] mb-4">Operations Dashboard</h2>
-                    <h3 class="text-5xl font-black text-white italic uppercase tracking-tighter">Business Intelligence</h3>
-                </div>
-                <div class="bg-blue-600/10 p-4 rounded-xl border border-blue-500/20 max-w-sm">
-                    <p class="text-[11px] text-slate-400 leading-relaxed italic">"Visualization of real-world operational trends from the Trade & Industrial paint market (Simulated Dataset)."</p>
-                </div>
+        <section id="certifications" class="py-32 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+            <div class="text-center space-y-4 gsap-card">
+                <span class="text-cyber-cyan font-mono text-xs tracking-widest uppercase">// Official Recognition</span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">Certifications & Awards</h2>
+                <p class="text-gray-400 max-w-xl mx-auto text-sm">Verified professional qualifications and corporate achievement honors.</p>
             </div>
 
-            <div class="grid lg:grid-cols-12 gap-8">
-                <div class="lg:col-span-8 glass-card p-10 rounded-[3rem]">
-                    <div class="flex justify-between items-center mb-10">
-                        <h4 class="text-white font-bold uppercase tracking-widest text-xs">Regional Recovery Trend (%)</h4>
-                        <div class="flex gap-4 text-[9px] font-black uppercase text-slate-500">
-                            <span><i class="fa-solid fa-circle text-blue-500 mr-1"></i> Target (100%)</span>
-                            <span><i class="fa-solid fa-circle text-slate-700 mr-1"></i> Actual Collection</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Google Data Analytics -->
+                <div class="glass-card p-6 rounded-2xl flex flex-col justify-between space-y-6 gsap-card border-cyber-cyan/30">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                            <i class="fa-brands fa-google text-2xl text-white"></i>
                         </div>
+                        <span class="text-xs font-mono text-cyber-cyan font-bold">ISSUED: AUG 7, 2022</span>
+                        <h3 class="text-lg font-bold text-white">Google Data Analytics Professional Certificate</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">8-Course Specialization by Google (Coursera) covering data transformation, SQL queries, data ethics, and analytical storytelling.</p>
                     </div>
-                    <canvas id="recoveryChart" height="150"></canvas>
-                </div>
-
-                <div class="lg:col-span-4 glass-card p-10 rounded-[3rem] flex flex-col justify-between">
-                    <div>
-                        <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-8">Sales Composition</h4>
-                        <canvas id="salesMixChart"></canvas>
-                    </div>
-                    <div class="mt-8 pt-8 border-t border-white/5">
-                        <div class="flex justify-between items-center text-[10px] font-bold text-slate-500 uppercase">
-                            <span>Primary Revenue Driver</span>
-                            <span class="text-blue-500 font-black">Trade Dept.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Education & Certificates -->
-    <section id="education" class="py-32 px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid lg:grid-cols-2 gap-20">
-                <div>
-                    <h2 class="text-xs font-black text-blue-500 uppercase tracking-[0.5em] mb-12 italic">Academic History</h2>
-                    <div class="space-y-8">
-                        <div class="glass-card p-8 rounded-3xl border-l-4 border-blue-600 relative overflow-hidden">
-                            <div class="absolute -right-4 -top-4 text-blue-600/10 text-8xl font-black"><i class="fa-solid fa-code"></i></div>
-                            <span class="text-[10px] font-bold text-slate-500 tracking-widest">2015 — 2018</span>
-                            <h4 class="text-2xl font-black text-white mt-1 italic uppercase">ACCP Pro</h4>
-                            <p class="text-blue-500 text-xs font-black tracking-widest uppercase mt-1">APTECH Computer Education</p>
-                            <div class="flex flex-wrap gap-2 mt-6">
-                                <span class="px-3 py-1 bg-white/5 rounded text-[9px] font-bold text-slate-400 uppercase">Java</span>
-                                <span class="px-3 py-1 bg-white/5 rounded text-[9px] font-bold text-slate-400 uppercase">SQL Server</span>
-                                <span class="px-3 py-1 bg-white/5 rounded text-[9px] font-bold text-slate-400 uppercase">PHP</span>
-                                <span class="px-3 py-1 bg-white/5 rounded text-[9px] font-bold text-slate-400 uppercase">Software Design</span>
-                            </div>
-                        </div>
-                        <div class="glass-card p-8 rounded-3xl border-l-4 border-slate-700">
-                            <span class="text-[10px] font-bold text-slate-500 tracking-widest">2012 — 2014</span>
-                            <h4 class="text-2xl font-black text-white mt-1 italic uppercase">Intermediate</h4>
-                            <p class="text-slate-500 text-xs font-black tracking-widest uppercase mt-1">Jamia Millia Govt. Degree College</p>
-                            <p class="text-slate-400 text-xs mt-4">Pre-Engineering Foundation.</p>
-                        </div>
+                    <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono">
+                        <span class="text-gray-400">Google / Coursera</span>
+                        <span class="text-cyber-emerald"><i class="fa-solid fa-circle-check"></i> Verified</span>
                     </div>
                 </div>
 
-                <div>
-                    <h2 class="text-xs font-black text-blue-500 uppercase tracking-[0.5em] mb-12 italic">Industry Credentials</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                        <div class="glass-card p-6 rounded-2xl flex items-center gap-4 hover:border-blue-500/50">
-                            <i class="fa-brands fa-google text-2xl text-blue-400"></i>
-                            <div>
-                                <h5 class="text-white font-bold text-xs uppercase leading-tight">Data Analytics</h5>
-                                <p class="text-[8px] text-slate-500 font-bold uppercase mt-1">Google Professional</p>
-                            </div>
+                <!-- Microsoft Power BI -->
+                <div class="glass-card p-6 rounded-2xl flex flex-col justify-between space-y-6 gsap-card border-amber-500/30">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 text-2xl">
+                            <i class="fa-solid fa-chart-column"></i>
                         </div>
-                        <div class="glass-card p-6 rounded-2xl flex items-center gap-4 hover:border-yellow-500/50">
-                            <i class="fa-solid fa-chart-line text-2xl text-yellow-500"></i>
-                            <div>
-                                <h5 class="text-white font-bold text-xs uppercase leading-tight">Power BI Mastery</h5>
-                                <p class="text-[8px] text-slate-500 font-bold uppercase mt-1">Udemy Certified</p>
-                            </div>
-                        </div>
-                        <div class="glass-card p-6 rounded-2xl flex items-center gap-4 hover:border-blue-600/50">
-                            <i class="fa-solid fa-database text-2xl text-blue-600"></i>
-                            <div>
-                                <h5 class="text-white font-bold text-xs uppercase leading-tight">MySQL Specialist</h5>
-                                <p class="text-[8px] text-slate-500 font-bold uppercase mt-1">365 Careers</p>
-                            </div>
-                        </div>
-                        <div class="glass-card p-6 rounded-2xl flex items-center gap-4 hover:border-emerald-500/50">
-                            <i class="fa-solid fa-medal text-2xl text-emerald-500"></i>
-                            <div>
-                                <h5 class="text-white font-bold text-xs uppercase leading-tight">Top Performance</h5>
-                                <p class="text-[8px] text-slate-500 font-bold uppercase mt-1">MicroMerger Typing</p>
-                            </div>
-                        </div>
+                        <span class="text-xs font-mono text-amber-400 font-bold">ISSUED: SEPT 20, 2023</span>
+                        <h3 class="text-lg font-bold text-white">Microsoft Power BI Desktop for Business Intelligence</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">15-Hour Master Certification (Maven Analytics / Udemy) in DAX calculated measures, data modeling schemas, and executive dashboards.</p>
                     </div>
-                    
-                    <div class="glass-card p-10 rounded-[2rem] bg-gradient-to-br from-blue-600/20 to-transparent border-blue-500/20">
-                        <div class="flex items-center gap-6">
-                            <div class="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-3xl text-white shadow-xl shadow-blue-500/30">
-                                <i class="fa-solid fa-trophy"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-white font-black uppercase tracking-tighter text-xl italic">Employee of the Year</h4>
-                                <p class="text-blue-400 text-[10px] font-black uppercase tracking-widest mt-1">Nelson Paints Industries | May 2025</p>
-                            </div>
-                        </div>
+                    <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono">
+                        <span class="text-gray-400">Maven Analytics</span>
+                        <span class="text-cyber-emerald"><i class="fa-solid fa-circle-check"></i> Verified</span>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Contact -->
-    <section id="contact" class="py-40 px-6">
-        <div class="max-w-4xl mx-auto glass-card rounded-[4rem] p-16 text-center relative overflow-hidden shadow-2xl">
-            <div class="absolute -top-10 -right-10 w-64 h-64 bg-blue-600/10 blur-[120px]"></div>
-            <h2 class="text-5xl md:text-7xl font-black text-white mb-8 tracking-tighter italic uppercase">Let's Connect.</h2>
-            <p class="text-slate-400 mb-12 max-w-lg mx-auto font-medium">Available for collaboration on data strategy, operational automation, and business intelligence projects.</p>
-            
-            <div class="flex flex-wrap justify-center gap-6 mb-12">
-                <a href="https://linkedin.com/in/nomanlatif735/" target="_blank" class="flex items-center gap-4 bg-white/5 hover:bg-white/10 px-10 py-5 rounded-2xl border border-white/10 transition-all group">
-                    <i class="fa-brands fa-linkedin text-[#0077b5] text-3xl group-hover:scale-110 transition-transform"></i>
-                    <span class="text-white font-black uppercase tracking-widest text-xs">LinkedIn</span>
-                </a>
-                <a href="https://wa.me/message/EYGPMX446JO3F1" target="_blank" class="flex items-center gap-4 bg-emerald-500 text-white px-10 py-5 rounded-2xl transition-all hover:bg-emerald-400 shadow-xl shadow-emerald-500/20 group">
-                    <i class="fa-brands fa-whatsapp text-3xl group-hover:scale-110 transition-transform"></i>
-                    <span class="font-black uppercase tracking-widest text-xs">WhatsApp</span>
-                </a>
+                <!-- DigiSkills BI -->
+                <div class="glass-card p-6 rounded-2xl flex flex-col justify-between space-y-6 gsap-card border-blue-500/30">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 text-2xl">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <span class="text-xs font-mono text-blue-400 font-bold">ISSUED: OCT 20, 2022</span>
+                        <h3 class="text-lg font-bold text-white">Data Analytics & Business Intelligence</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">DigiSkills Training Program (DSTP 2.0 / Virtual University & Ignite Govt. of Pakistan). Advanced corporate analytics training.</p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono">
+                        <span class="text-gray-400">Virtual University</span>
+                        <span class="text-cyber-emerald"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                    </div>
+                </div>
+
+                <!-- Aptech Software Engineering -->
+                <div class="glass-card p-6 rounded-2xl flex flex-col justify-between space-y-6 gsap-card border-red-500/30">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 text-2xl">
+                            <i class="fa-solid fa-laptop-code"></i>
+                        </div>
+                        <span class="text-xs font-mono text-red-400 font-bold">ISSUED: SEP 27, 2018</span>
+                        <h3 class="text-lg font-bold text-white">Advanced Diploma in Software Engineering</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">Aptech Computer Education. Comprehensive coursework in database design, web technologies, software architecture, and algorithms.</p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono">
+                        <span class="text-gray-400">Aptech Center</span>
+                        <span class="text-cyber-emerald"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                    </div>
+                </div>
+
+                <!-- Employee of the Year 2025 -->
+                <div class="glass-card-gold p-6 rounded-2xl flex flex-col justify-between space-y-6 gsap-card border-cyber-gold">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center text-cyber-gold text-2xl">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <span class="text-xs font-mono text-cyber-gold font-bold">MAY 2025</span>
+                        <h3 class="text-lg font-bold text-white">Employee of the Year Award 2025</h3>
+                        <p class="text-xs text-gray-200 leading-relaxed">Nelson Paint Industries Pvt. Ltd. (Department of Operation Sales). Awarded for exemplary leadership, commercial data automation, and revenue accuracy.</p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-cyber-gold">
+                        <span>Nelson Paints Award</span>
+                        <span><i class="fa-solid fa-star"></i> Winner</span>
+                    </div>
+                </div>
+
+                <!-- MicroMerger Top Performer -->
+                <div class="glass-card p-6 rounded-2xl flex flex-col justify-between space-y-6 gsap-card border-purple-500/30">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-2xl">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <span class="text-xs font-mono text-purple-400 font-bold">ISSUED: NOV 2019</span>
+                        <h3 class="text-lg font-bold text-white">Top Performer Recognition</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">MicroMerger Pvt. Ltd. Awarded as a Top Performer in the Typing & Data Verification Contest for speed, focus, and errorless execution.</p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono">
+                        <span class="text-gray-400">MicroMerger</span>
+                        <span class="text-cyber-emerald"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="skills" class="py-32 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+            <div class="text-center space-y-4 gsap-card">
+                <span class="text-cyber-cyan font-mono text-xs tracking-widest uppercase">// Technical Stack</span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">Core Analytics Stack</h2>
+                <p class="text-gray-400 max-w-xl mx-auto text-sm">Specialized toolsets for corporate reporting, database management, and sales operations.</p>
             </div>
 
-            <div class="flex flex-col items-center gap-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">
-                <span>Karachi, Pakistan</span>
-                <span class="text-blue-500">+92 317 810 8960</span>
-                <span class="lowercase text-slate-600 tracking-normal font-bold">M.noman.latif3@gmail.com</span>
-            </div>
-        </div>
-    </section>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <div class="glass-card p-6 rounded-2xl space-y-4 gsap-card">
+                    <div class="w-10 h-10 rounded-lg bg-cyber-cyan/10 border border-cyber-cyan/30 flex items-center justify-center text-cyber-cyan text-xl">
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Power BI & DAX</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Executive dashboards, DAX calculated measures, data transformation, and relational data modeling schemas.</p>
+                </div>
 
-    <footer class="py-12 text-center text-[10px] font-black text-slate-800 uppercase tracking-[1.5em] opacity-40">
-        NOMAN LATIF // STRATEGIC OPERATIONS // 2026
+                <div class="glass-card p-6 rounded-2xl space-y-4 gsap-card">
+                    <div class="w-10 h-10 rounded-lg bg-cyber-emerald/10 border border-cyber-emerald/30 flex items-center justify-center text-cyber-emerald text-xl">
+                        <i class="fa-solid fa-file-csv"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Advanced Excel & Sheets</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Google Sheets automated formula pipelines, Power Query, Pivot tables, VLOOKUP/XLOOKUP, and pricing templates.</p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl space-y-4 gsap-card">
+                    <div class="w-10 h-10 rounded-lg bg-cyber-blue/10 border border-cyber-blue/30 flex items-center justify-center text-cyber-blue text-xl">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">SQL Databases</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">MySQL query writing, multi-table JOINs, data filtering, aggregation, and structural database management.</p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl space-y-4 gsap-card">
+                    <div class="w-10 h-10 rounded-lg bg-cyber-purple/10 border border-cyber-purple/30 flex items-center justify-center text-cyber-purple text-xl">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Sales Operations</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Revenue forecasting, dealer incentive modeling, ERP/CRM management, recovery planning, and retail analytics.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="contact" class="py-32 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+            <div class="glass-card p-8 sm:p-14 rounded-3xl space-y-8 border-cyber-cyan/40">
+                <span class="text-cyber-cyan font-mono text-xs tracking-widest uppercase">// Get In Touch</span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">Let's Discuss Data & Sales Growth</h2>
+                <p class="text-gray-300 max-w-lg mx-auto text-sm sm:text-base leading-relaxed">
+                    Open for high-impact commercial sales analytics, BI consultancy, and executive operations leadership opportunities in Karachi and remotely.
+                </p>
+                
+                <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+                    <a href="mailto:m.noman.latif3@gmail.com" class="px-8 py-4 rounded-xl bg-gradient-to-r from-cyber-cyan to-cyber-blue text-black font-extrabold text-sm hover:shadow-[0_0_30px_rgba(0,242,254,0.6)] transition-all">
+                        <i class="fa-solid fa-envelope"></i> Send Email
+                    </a>
+                    <a href="tel:+923178108960" class="px-8 py-4 rounded-xl bg-white/10 text-white font-bold text-sm border border-white/20 hover:bg-white/20 transition-all">
+                        <i class="fa-solid fa-phone"></i> +92 317 8108960
+                    </a>
+                </div>
+
+                <div class="pt-8 border-t border-white/10 text-xs font-mono text-gray-500">
+                    📍 Gulistan-e-Johar, Karachi, Pakistan
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="relative z-10 text-center py-8 border-t border-white/10 text-xs font-mono text-gray-500">
+        <p>© 2026 Noman Latif | Interactive 3D WebGL Scrollytelling Architecture</p>
     </footer>
 
     <script>
-        const ctxHero = document.getElementById('heroChart').getContext('2d');
-        const ctxMix = document.getElementById('salesMixChart').getContext('2d');
-        const ctxRecovery = document.getElementById('recoveryChart').getContext('2d');
+        window.onload = function () {
+            gsap.registerPlugin(ScrollTrigger);
 
-        Chart.defaults.color = '#64748b';
-        Chart.defaults.font.family = 'Plus Jakarta Sans';
-        Chart.defaults.font.weight = '600';
+            // 1. Initialize WebGL Canvas & Scene
+            const canvas = document.getElementById('webgl-canvas');
+            const scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x030712, 0.012);
 
-        // Hero Chart (Business Trend)
-        new Chart(ctxHero, {
-            type: 'line',
-            data: {
-                labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q1-25', 'Q2-25'],
-                datasets: [{
-                    label: 'Workflow Efficiency',
-                    data: [30, 45, 42, 65, 88, 96],
-                    borderColor: '#3b82f6',
-                    borderWidth: 4,
-                    pointBackgroundColor: '#3b82f6',
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: (context) => {
-                        const gradient = ctxHero.createLinearGradient(0, 0, 0, 400);
-                        gradient.addColorStop(0, 'rgba(59, 130, 246, 0.2)');
-                        gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
-                        return gradient;
-                    }
-                }]
-            },
-            options: {
-                plugins: { legend: { display: false } },
-                scales: { 
-                    y: { display: true, grid: { color: 'rgba(255,255,255,0.02)' } }, 
-                    x: { grid: { display: false } } 
-                }
+            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, 35);
+
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // 2. Add Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const pointLight = new THREE.PointLight(0x00f2fe, 2, 100);
+            pointLight.position.set(10, 20, 20);
+            scene.add(pointLight);
+
+            // 3. Create 3D Holographic Bar Chart (Hero Visualization)
+            const chartGroup = new THREE.Group();
+            const barHeights = [8, 14, 11, 19, 25, 16, 22, 28];
+            const barGeom = new THREE.BoxGeometry(1.2, 1, 1.2);
+
+            barHeights.forEach((height, i) => {
+                const mat = new THREE.MeshPhongMaterial({
+                    color: i % 2 === 0 ? 0x00f2fe : 0x8b5cf6,
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.85
+                });
+                const bar = new THREE.Mesh(barGeom, mat);
+                bar.scale.y = height;
+                bar.position.set((i - 3.5) * 2.5, height / 2 - 10, 0);
+                chartGroup.add(bar);
+            });
+            scene.add(chartGroup);
+
+            // 4. Create 3D Floating Data Particle Matrix
+            const particleCount = 1200;
+            const particleGeo = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const colorCyan = new THREE.Color(0x00f2fe);
+            const colorPurple = new THREE.Color(0x8b5cf6);
+            const colorGold = new THREE.Color(0xf59e0b);
+
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 100;
+                positions[i + 1] = (Math.random() - 0.5) * 100;
+                positions[i + 2] = (Math.random() - 0.5) * 100;
+
+                const mixedColor = colorCyan.clone().lerp(
+                    Math.random() > 0.5 ? colorPurple : colorGold,
+                    Math.random()
+                );
+
+                colors[i] = mixedColor.r;
+                colors[i + 1] = mixedColor.g;
+                colors[i + 2] = mixedColor.b;
             }
-        });
 
-        // Sales Mix (Doughnut)
-        new Chart(ctxMix, {
-            type: 'doughnut',
-            data: {
-                labels: ['Trade Sales', 'Industrial', 'Project'],
-                datasets: [{
-                    data: [75, 15, 10],
-                    backgroundColor: ['#3b82f6', '#1e293b', '#475569'],
-                    borderWidth: 0,
-                    hoverOffset: 15
-                }]
-            },
-            options: {
-                cutout: '80%',
-                plugins: {
-                    legend: { position: 'bottom', labels: { padding: 20, color: '#94a3b8', font: { size: 9, weight: 'bold' } } }
-                }
+            particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const particleMat = new THREE.PointsMaterial({
+                size: 0.65,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.75
+            });
+
+            const particleSystem = new THREE.Points(particleGeo, particleMat);
+            scene.add(particleSystem);
+
+            // 5. Create 3D Rotating Mesh Geometric Node (Experience & Certs)
+            const nodeGeo = new THREE.IcosahedronGeometry(10, 2);
+            const nodeMat = new THREE.MeshBasicMaterial({
+                color: 0x00f2fe,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.2
+            });
+            const nodeMesh = new THREE.Mesh(nodeGeo, nodeMat);
+            nodeMesh.position.set(0, 0, -10);
+            scene.add(nodeMesh);
+
+            // Mouse Move Parallax Effect
+            let mouseX = 0;
+            let mouseY = 0;
+            window.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+                mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+            });
+
+            // 6. Animation Render Loop
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Idle Rotations
+                chartGroup.rotation.y += 0.003;
+                particleSystem.rotation.y += 0.0006;
+                nodeMesh.rotation.x += 0.001;
+                nodeMesh.rotation.y += 0.0015;
+
+                // Mouse Parallax interpolation
+                camera.position.x += (mouseX * 3 - camera.position.x) * 0.05;
+                camera.position.y += (-mouseY * 3 - camera.position.y) * 0.05;
+
+                renderer.render(scene, camera);
             }
-        });
+            animate();
 
-        // Recovery (Bar Chart)
-        new Chart(ctxRecovery, {
-            type: 'bar',
-            data: {
-                labels: ['Karachi', 'Sindh Central', 'Sindh Interior', 'Balochistan'],
-                datasets: [
-                    {
-                        label: 'Actual Recovery (%)',
-                        data: [92, 84, 68, 42],
-                        backgroundColor: '#3b82f6',
-                        borderRadius: 12,
-                        barThickness: 40
+            // Window Resize Handler
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            // 7. GSAP ScrollTrigger Animations & Camera Morphing
+            gsap.from('.gsap-hero > *', {
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                stagger: 0.15,
+                ease: 'power3.out'
+            });
+
+            gsap.utils.toArray('.gsap-card').forEach((card) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
                     },
-                    {
-                        label: 'Target',
-                        data: [100, 100, 100, 100],
-                        backgroundColor: 'rgba(255,255,255,0.03)',
-                        borderRadius: 12,
-                        barThickness: 40
-                    }
-                ]
-            },
-            options: {
-                scales: {
-                    y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.03)' } },
-                    x: { grid: { display: false } }
-                },
-                plugins: { legend: { display: false } }
-            }
-        });
-    </script>
+                    opacity: 0,
+                    y: 40,
+                    duration: 0.8,
+                    ease: 'power3.out'
+                });
+            });
 
+            // Scrollytelling 3D Camera Shifts
+            gsap.to(camera.position, {
+                scrollTrigger: {
+                    trigger: '#experience',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1
+                },
+                z: 22,
+                y: -5
+            });
+
+            gsap.to(chartGroup.position, {
+                scrollTrigger: {
+                    trigger: '#certifications',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1
+                },
+                y: 15,
+                z: -20
+            });
+
+            gsap.to(nodeMesh.scale, {
+                scrollTrigger: {
+                    trigger: '#skills',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1
+                },
+                x: 1.8,
+                y: 1.8,
+                z: 1.8
+            });
+        };
+    </script>
 </body>
 </html>
-
-
-
-
